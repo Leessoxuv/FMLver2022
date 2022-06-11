@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".join">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="413dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:src="@drawable/logonv1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.166"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="179dp"
+        android:layout_height="69dp"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="78dp"
+        android:layout_marginEnd="116dp"
+        android:text="회원 가입"
+        android:textColor="@color/black"
+        android:textSize="45dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="92dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="41dp"
+        android:layout_marginTop="30dp"
+        android:text="아이디 : "
+        android:textColor="@color/black"
+        android:textSize="25dp"
+        app:layout_constraintEnd_toStartOf="@+id/Et_Joinemail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <EditText
+        android:id="@+id/Et_Joinemail"
+        android:layout_width="251dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="27dp"
+        android:hint="가입할 Email를 입력하세요."
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="112dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="3dp"
+        android:text="비밀번호 : "
+        android:textColor="@color/black"
+        android:textSize="25dp"
+        app:layout_constraintEnd_toStartOf="@+id/Et_Joinpw"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <EditText
+        android:id="@+id/Et_Joinpw"
+        android:layout_width="251dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="27dp"
+        android:hint="비밀번호를 입력하세요."
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/Et_Joinemail" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="90dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="5dp"
+        android:text="재확인 : "
+        android:textColor="@color/black"
+        android:textSize="25dp"
+        app:layout_constraintEnd_toStartOf="@+id/Et_Repw"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <EditText
+        android:id="@+id/Et_Repw"
+        android:layout_width="251dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="28dp"
+        android:hint="비밀번호를 다시 입력하세요."
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toBottomOf="@+id/Et_Joinpw" />
+
+    <Button
+        android:id="@+id/Btn_check"
+        android:layout_width="96dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="287dp"
+        android:layout_marginEnd="28dp"
+        android:backgroundTint="#eeddff"
+        android:text="중복 확인"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Et_Repw" />
+
+    <TextView
+        android:id="@+id/Tv_ckview"
+        android:layout_width="247dp"
+        android:layout_height="37dp"
+        android:text=" "
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/Btn_check"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Et_Repw" />
+
+    <Button
+        android:id="@+id/Btn_JoinSucceess"
+        android:layout_width="121dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="133dp"
+        android:layout_marginEnd="157dp"
+        android:layout_marginBottom="251dp"
+        android:backgroundTint="#eeddff"
+        android:text="회원 가입"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Tv_ckview" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
