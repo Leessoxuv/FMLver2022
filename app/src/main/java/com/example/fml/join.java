@@ -31,6 +31,7 @@ public class join extends AppCompatActivity {
         Btn_joinSuceess = (Button) findViewById(R.id.Btn_JoinSucceess);
 
         mRealm = Realm.getDefaultInstance();
+        onDestroy();
 
 
         Btn_check.setOnClickListener(new View.OnClickListener() {

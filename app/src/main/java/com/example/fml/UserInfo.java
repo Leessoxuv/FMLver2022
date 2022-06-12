@@ -44,16 +44,18 @@ public class UserInfo extends AppCompatActivity implements RealmChangeListener<R
         uploadimg = (Button) findViewById(R.id.uploadImg);
         Btn_Save = (Button) findViewById(R.id.Btn_Save);
 
+
         userInfoRealm.init(this);
         RealmConfiguration userModuleConfig = new RealmConfiguration.Builder()
                 .modules(new UserModule())
                 .name("UserInfo.realm")
                 .build();
-        userInfoRealm = Realm.getInstance(userModuleConfig);
         userInfoRealm = Realm.getDefaultInstance();
+        userInfoRealm = Realm.getInstance(userModuleConfig);
         userInfoRealm.setDefaultConfiguration(userModuleConfig);
         userInfoRealm.addChangeListener(this);
         showResult();
+        onDestroy();
 
 
         uploadimg.setOnClickListener(new View.OnClickListener() {
@@ -124,19 +126,11 @@ public class UserInfo extends AppCompatActivity implements RealmChangeListener<R
                         userInfo.setBirth(Et_Birth.getText().toString());
                         userInfo.setNumber(Et_Number.getText().toString());
                     }
-                }, new Realm.Transaction.OnSuccess() {
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(UserInfo.this, "회원정보가 저장되었습니다.", Toast.LENGTH_LONG).show();
-                        Intent intent4 = new Intent(getApplicationContext(), Main.class);
-                        startActivity(intent4);
-                    }
-                }, new Realm.Transaction.OnError() {
-                    @Override
-                    public void onError(Throwable error) {
-                        Toast.makeText(UserInfo.this, "회원정보가 저장되지않았습니다.", Toast.LENGTH_LONG).show();
-                    }
-                });
+                }, () -> {
+                    Toast.makeText(UserInfo.this, "회원정보가 저장되었습니다.", Toast.LENGTH_LONG).show();
+                    Intent intent4 = new Intent(getApplicationContext(), Main.class);
+                    startActivity(intent4);
+                }, error -> Toast.makeText(UserInfo.this, "회원정보가 저장되지않았습니다.", Toast.LENGTH_LONG).show());
             }
         });
     }
@@ -163,5 +157,9 @@ public class UserInfo extends AppCompatActivity implements RealmChangeListener<R
                         .into(userProfile);
             }
         }
+    }
+    protected void onDestory() {
+        super.onDestroy();
+        userInfoRealm.close();
     }
 }

@@ -48,9 +48,10 @@ public class login extends AppCompatActivity  {
                 .modules(new UserModule())
                 .name("User.realm")
                 .build();
+        userRealm = Realm.getDefaultInstance();
         userRealm = Realm.getInstance(userModuleConfig);
         userRealm.setDefaultConfiguration(userModuleConfig);
-        userRealm = Realm.getDefaultInstance();
+
 
         Log.d(TAG, "Realm 디렉토리 : " + userRealm.getPath());
         Log.d(TAG, "Realm 환경설정 값: " + userRealm.getConfiguration());
