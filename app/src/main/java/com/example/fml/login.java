@@ -4,7 +4,6 @@ import static android.content.ContentValues.TAG;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -15,67 +14,35 @@ import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
-import com.example.fml.DB.UserDB;
-import com.example.fml.DB.UserInfoDB;
-import com.example.fml.DB.UserModule;
+import com.example.fml.DB.FMLUsersrealm;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmConfiguration;
 
-public class login extends AppCompatActivity  {
+public class login extends AppCompatActivity {
     EditText Et_Loginemail, Et_Loginpw;
     Button Btn_login, Btn_join;
-    Realm userRealm;
+    Realm FMLUsersrealm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         getHashKey();
-        onDestory();
 
         Et_Loginemail = (EditText) findViewById(R.id.Et_Loginemail);
         Et_Loginpw = (EditText) findViewById(R.id.Et_Loginpw);
         Btn_login = (Button) findViewById(R.id.Btn_login);
         Btn_join = (Button) findViewById(R.id.Btn_join);
 
-        userRealm.init(this);
-        RealmConfiguration userModuleConfig = new RealmConfiguration.Builder()
-                .modules(new UserModule())
-                .name("User.realm")
-                .build();
-        userRealm = Realm.getDefaultInstance();
-        userRealm = Realm.getInstance(userModuleConfig);
-        userRealm.setDefaultConfiguration(userModuleConfig);
+        FMLUsersrealm = Realm.getDefaultInstance();
 
 
-        Log.d(TAG, "Realm 디렉토리 : " + userRealm.getPath());
-        Log.d(TAG, "Realm 환경설정 값: " + userRealm.getConfiguration());
+        Log.d(TAG, "Realm 디렉토리 : " + FMLUsersrealm.getPath());
+        Log.d(TAG, "Realm 환경설정 값: " + FMLUsersrealm.getConfiguration());
 
-
-
-        Btn_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String Lemail = Et_Loginemail.getText().toString();
-                String Lpassword = Et_Loginpw.getText().toString();
-                UserDB user = userRealm.where(UserDB.class)
-                        .equalTo("email", Lemail)
-                        .equalTo("password", Lpassword)
-                        .findFirst();
-                if (user != null) {
-                    Intent intent1 = new Intent(getApplicationContext(), Main.class);
-                    startActivity(intent1);
-                } else {
-                    Toast.makeText(login.this, "일치하는 회원이 없습니다.", Toast.LENGTH_LONG).show();
-                }
-
-            }
-        });
         Btn_join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,9 +50,29 @@ public class login extends AppCompatActivity  {
                 startActivity(intent2);
             }
         });
+
     }
 
-    private void getHashKey(){
+    public void loginclick(View view) {
+        String Lemail = Et_Loginemail.getText().toString();
+        String Lpassword = Et_Loginpw.getText().toString();
+        FMLUsersrealm = Realm.getDefaultInstance();
+        FMLUsersrealm user = FMLUsersrealm.where(FMLUsersrealm.class)
+                .equalTo("email", Lemail)
+                .equalTo("password", Lpassword)
+                .findFirst();
+        if (user.equals(Lemail)) {
+            Intent intent1 = new Intent(login.this, Main.class);
+            startActivity(intent1);
+
+        } else {
+            Toast.makeText(login.this, "일치하는 회원이 없습니다.", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+
+    private void getHashKey() {
         PackageInfo packageInfo = null;
         try {
             packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
@@ -107,7 +94,7 @@ public class login extends AppCompatActivity  {
     }
     protected void onDestory() {
         super.onDestroy();
-        userRealm.close();
+        FMLUsersrealm.close();
     }
 
 }

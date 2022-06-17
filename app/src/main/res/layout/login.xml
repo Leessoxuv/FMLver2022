@@ -60,6 +60,7 @@
         android:layout_marginEnd="21dp"
         android:backgroundTint="#eeddff"
         android:text="로그인"
+        android:onClick="loginclick"
         app:layout_constraintEnd_toStartOf="@+id/Btn_join"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

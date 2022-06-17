@@ -57,31 +57,56 @@
         app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
+
+    <Button
+        android:id="@+id/Btn_echeck"
+        android:layout_width="96dp"
+        android:layout_height="41dp"
+        android:layout_marginEnd="37dp"
+        android:backgroundTint="#eeddff"
+        android:text="중복 확인"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Tv_ckidview"
+        app:layout_constraintTop_toBottomOf="@+id/Et_Joinemail" />
+
+    <TextView
+        android:id="@+id/Tv_ckidview"
+        android:layout_width="240dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="38dp"
+        android:text=" "
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toStartOf="@+id/Btn_echeck"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Et_Joinemail" />
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="112dp"
         android:layout_height="39dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="3dp"
+        android:layout_marginTop="9dp"
         android:text="비밀번호 : "
         android:textColor="@color/black"
         android:textSize="25dp"
         app:layout_constraintEnd_toStartOf="@+id/Et_Joinpw"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/Tv_ckidview" />
 
     <EditText
         android:id="@+id/Et_Joinpw"
         android:layout_width="251dp"
         android:layout_height="44dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="27dp"
         android:hint="비밀번호를 입력하세요."
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/Et_Joinemail" />
+        app:layout_constraintTop_toBottomOf="@+id/Btn_echeck" />
 
     <TextView
         android:id="@+id/textView4"
@@ -109,31 +134,29 @@
         app:layout_constraintTop_toBottomOf="@+id/Et_Joinpw" />
 
     <Button
-        android:id="@+id/Btn_check"
+        android:id="@+id/Btn_pcheck"
         android:layout_width="96dp"
         android:layout_height="41dp"
-        android:layout_marginStart="287dp"
         android:layout_marginEnd="28dp"
         android:backgroundTint="#eeddff"
         android:text="중복 확인"
         android:textColor="@color/black"
         android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Tv_ckview"
         app:layout_constraintTop_toBottomOf="@+id/Et_Repw" />
 
     <TextView
         android:id="@+id/Tv_ckview"
-        android:layout_width="247dp"
-        android:layout_height="37dp"
+        android:layout_width="240dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="28dp"
         android:text=" "
         android:textColor="@color/black"
         android:textSize="20dp"
-        android:layout_marginStart="42dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintEnd_toStartOf="@+id/Btn_check"
+        app:layout_constraintBottom_toTopOf="@+id/Btn_JoinSucceess"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Et_Repw" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <Button
         android:id="@+id/Btn_JoinSucceess"
@@ -141,12 +164,12 @@
         android:layout_height="43dp"
         android:layout_marginStart="133dp"
         android:layout_marginEnd="157dp"
-        android:layout_marginBottom="251dp"
-        android:backgroundTint="#eeddff"
+
+        android:enabled="false"
+        android:onClick="Joinclick"
         android:text="회원 가입"
         android:textColor="@color/black"
         android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Tv_ckview" />

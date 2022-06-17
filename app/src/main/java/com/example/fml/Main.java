@@ -1,11 +1,15 @@
 package com.example.fml;
 
 import android.Manifest;
+import android.app.MediaRouteButton;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +25,12 @@ import androidx.core.content.ContextCompat;
 
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
+import net.daum.mf.map.api.MapPOIItem;
+
 
 
 public class Main extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.MapViewEventListener {
-
+    
     RelativeLayout mapview;
     Button Btn_SendGps;
     private static final String LOG_TAG = "Main";
@@ -32,6 +38,7 @@ public class Main extends AppCompatActivity implements MapView.CurrentLocationEv
     private ViewGroup mapViewContainer;
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
+    private static int REQUEST_ACCESS_FINE_LOCATION = 1000;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
     @Override
@@ -39,14 +46,35 @@ public class Main extends AppCompatActivity implements MapView.CurrentLocationEv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        MapView mapView = new MapView(this);
-        ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.mapview);
+        mapView = new MapView(this);
+        mapViewContainer = (ViewGroup) findViewById(R.id.mapview);
         mapViewContainer.addView(mapView);
+        mapView.setMapViewEventListener(this);
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading);
         if (!checkLocationServicesStatus()) {
             showDialogForLocationServiceSetting();
-        } else {
+        }else {
             checkRunTimePermission();
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            int permissionCheck = ContextCompat.checkSelfPermission(Main.this, Manifest.permission.ACCESS_FINE_LOCATION);
+
+            if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+
+                // 권한 없음
+                ActivityCompat.requestPermissions(Main.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_ACCESS_FINE_LOCATION);
+
+
+            } else {
+
+                // ACCESS_FINE_LOCATION 에 대한 권한이 이미 있음.
+
+            }
+
+
         }
 
         Btn_SendGps = (Button) findViewById(R.id.Btn_SendGps);
@@ -55,7 +83,7 @@ public class Main extends AppCompatActivity implements MapView.CurrentLocationEv
             @Override
             public void onClick(View view) {
 
-                Intent intent5 = new Intent(getApplicationContext(), SendMsg.class);
+                Intent intent5 = new Intent(Main.this, SendMsg.class);
                 startActivity(intent5);
             }
         });
@@ -65,22 +93,30 @@ public class Main extends AppCompatActivity implements MapView.CurrentLocationEv
         super.onDestroy();
         mapViewContainer.removeAllViews();
     }
+
     @Override
     public void onCurrentLocationUpdate(MapView mapView, MapPoint currentLocation, float accuracyInMeters) {
         MapPoint.GeoCoordinate mapPointGeo = currentLocation.getMapPointGeoCoord();
         Log.i(LOG_TAG, String.format("MapView onCurrentLocationUpdate (%f,%f) accuracy (%f)", mapPointGeo.latitude, mapPointGeo.longitude, accuracyInMeters));
     }
     @Override
-    public void onCurrentLocationDeviceHeadingUpdate(MapView mapView, float v) {}
+    public void onCurrentLocationDeviceHeadingUpdate(MapView mapView, float v) {
+    }
+
     @Override
-    public void onCurrentLocationUpdateFailed(MapView mapView) {}
+    public void onCurrentLocationUpdateFailed(MapView mapView) {
+    }
+
     @Override
-    public void onCurrentLocationUpdateCancelled(MapView mapView) {}
+    public void onCurrentLocationUpdateCancelled(MapView mapView) {
+    }
+
 
     private void onFinishReverseGeoCoding(String result) {
 //        Toast.makeText(LocationDemoActivity.this, "Reverse Geo-coding : " + result, Toast.LENGTH_SHORT).show();
     }
 
+    // ActivityCompat.requestPermissions를 사용한 퍼미션 요청의 결과를 리턴받는 메소드
     @Override
     public void onRequestPermissionsResult(int permsRequestCode,
                                            @NonNull String[] permissions,
@@ -89,8 +125,10 @@ public class Main extends AppCompatActivity implements MapView.CurrentLocationEv
         super.onRequestPermissionsResult(permsRequestCode, permissions, grandResults);
         if (permsRequestCode == PERMISSIONS_REQUEST_CODE && grandResults.length == REQUIRED_PERMISSIONS.length) {
 
+            // 요청 코드가 PERMISSIONS_REQUEST_CODE 이고, 요청한 퍼미션 개수만큼 수신되었다면
             boolean check_result = true;
 
+            // 모든 퍼미션을 허용했는지 체크합니다.
             for (int result : grandResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
                     check_result = false;
@@ -100,9 +138,11 @@ public class Main extends AppCompatActivity implements MapView.CurrentLocationEv
 
             if (check_result) {
                 Log.d("@@@", "start");
+                //위치 값을 가져올 수 있음
 
             } else {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[0])) {
+                // 거부한 퍼미션이 있다면 앱을 사용할 수 없는 이유를 설명해주고 앱을 종료합니다.2 가지 경우가 있다
+                if (ActivityCompat.shouldShowRequestPermissionRationale(Main.this, REQUIRED_PERMISSIONS[0])) {
                     Toast.makeText(Main.this, "퍼미션이 거부되었습니다. 앱을 다시 실행하여 퍼미션을 허용해주세요.", Toast.LENGTH_LONG).show();
                     finish();
                 } else {
@@ -113,23 +153,34 @@ public class Main extends AppCompatActivity implements MapView.CurrentLocationEv
     }
     void checkRunTimePermission(){
 
+        //런타임 퍼미션 처리
+        // 1. 위치 퍼미션을 가지고 있는지 체크합니다.
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(Main.this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
 
         if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED ) {
+            // 2. 이미 퍼미션을 가지고 있다면
+            // ( 안드로이드 6.0 이하 버전은 런타임 퍼미션이 필요없기 때문에 이미 허용된 걸로 인식합니다.)
+            // 3.  위치 값을 가져올 수 있음
 
-        } else {
+        } else {  //2. 퍼미션 요청을 허용한 적이 없다면 퍼미션 요청이 필요합니다. 2가지 경우(3-1, 4-1)가 있습니다.
+            // 3-1. 사용자가 퍼미션 거부를 한 적이 있는 경우에는
             if (ActivityCompat.shouldShowRequestPermissionRationale(Main.this, REQUIRED_PERMISSIONS[0])) {
+                // 3-2. 요청을 진행하기 전에 사용자가에게 퍼미션이 필요한 이유를 설명해줄 필요가 있습니다.
                 Toast.makeText(Main.this, "이 앱을 실행하려면 위치 접근 권한이 필요합니다.", Toast.LENGTH_LONG).show();
+                // 3-3. 사용자게에 퍼미션 요청을 합니다. 요청 결과는 onRequestPermissionResult에서 수신됩니다.
                 ActivityCompat.requestPermissions(Main.this, REQUIRED_PERMISSIONS,
                         PERMISSIONS_REQUEST_CODE);
             } else {
+                // 4-1. 사용자가 퍼미션 거부를 한 적이 없는 경우에는 퍼미션 요청을 바로 합니다.
+                // 요청 결과는 onRequestPermissionResult에서 수신됩니다.
                 ActivityCompat.requestPermissions(Main.this, REQUIRED_PERMISSIONS,
                         PERMISSIONS_REQUEST_CODE);
             }
         }
     }
 
+    //여기부터는 GPS 활성화를 위한 메소드들
     private void showDialogForLocationServiceSetting() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(Main.this);
@@ -153,6 +204,7 @@ public class Main extends AppCompatActivity implements MapView.CurrentLocationEv
         });
         builder.create().show();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -170,28 +222,57 @@ public class Main extends AppCompatActivity implements MapView.CurrentLocationEv
                 break;
         }
     }
+
     public boolean checkLocationServicesStatus() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
+
     @Override
-    public void onMapViewInitialized(MapView mapView) {}
+    public void onMapViewInitialized(MapView mapView) {
+
+    }
+
     @Override
-    public void onMapViewCenterPointMoved(MapView mapView, MapPoint mapPoint) {}
+    public void onMapViewCenterPointMoved(MapView mapView, MapPoint mapPoint) {
+
+    }
+
     @Override
-    public void onMapViewZoomLevelChanged(MapView mapView, int i) { }
+    public void onMapViewZoomLevelChanged(MapView mapView, int i) {
+
+    }
+
     @Override
-    public void onMapViewSingleTapped(MapView mapView, MapPoint mapPoint) {}
+    public void onMapViewSingleTapped(MapView mapView, MapPoint mapPoint) {
+
+    }
+
     @Override
-    public void onMapViewDoubleTapped(MapView mapView, MapPoint mapPoint) {}
+    public void onMapViewDoubleTapped(MapView mapView, MapPoint mapPoint) {
+
+    }
+
     @Override
-    public void onMapViewLongPressed(MapView mapView, MapPoint mapPoint) {}
+    public void onMapViewLongPressed(MapView mapView, MapPoint mapPoint) {
+
+    }
+
     @Override
-    public void onMapViewDragStarted(MapView mapView, MapPoint mapPoint) {}
+    public void onMapViewDragStarted(MapView mapView, MapPoint mapPoint) {
+
+    }
+
     @Override
-    public void onMapViewDragEnded(MapView mapView, MapPoint mapPoint) {}
+    public void onMapViewDragEnded(MapView mapView, MapPoint mapPoint) {
+
+    }
+
     @Override
-    public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {}
+    public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
+
+    }
 }
+

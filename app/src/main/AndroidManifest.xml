@@ -6,7 +6,9 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> />
     <application
         android:name=".DB.realmDB"
         android:allowBackup="true"
@@ -20,6 +22,7 @@
         android:usesCleartextTraffic="true"
         android:networkSecurityConfig="@xml/network_security_config"
         tools:targetApi="31">
+        <meta-data android:name="com.kakao.sdk.AppKey" android:value="bc4c39a7c8b28ec2d380db61e03f991b"/>
         <activity
             android:name=".login"
             android:exported="true">
@@ -29,11 +32,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".join"/>
-        <activity android:name=".UserInfo"/>
-        <activity android:name=".Main"/>
-        <activity android:name=".SendMsg"/>
-        <meta-data android:name="com.kakao.sdk.AppKey" android:value="bc4c39a7c8b28ec2d380db61e03f991b"/>
+        <activity android:name=".join"
+            android:exported="true"/>
+        <activity android:name=".UserInfo"
+            android:exported="true"/>
+        <activity android:name=".Main"
+            android:exported="true"/>
+
+        <activity android:name=".SendMsg" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
