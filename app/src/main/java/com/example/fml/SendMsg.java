@@ -48,20 +48,18 @@ public class SendMsg extends AppCompatActivity {
         gpsview = (Button) findViewById(R.id.gpsview);
 
         if (!checkLocationServicesStatus()) {
-
             showDialogForLocationServiceSetting();
-        } else {
-
+        }else {
             checkRunTimePermission();
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+            int permissionCheck = ContextCompat.checkSelfPermission(SendMsg.this, Manifest.permission.ACCESS_FINE_LOCATION);
 
             if (permissionCheck == PackageManager.PERMISSION_DENIED) {
 
                 // 권한 없음
-                ActivityCompat.requestPermissions(this,
+                ActivityCompat.requestPermissions(SendMsg.this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         REQUEST_ACCESS_FINE_LOCATION);
 
@@ -75,24 +73,19 @@ public class SendMsg extends AppCompatActivity {
 
         }
 
-// OS가 Marshmallow 이전일 경우 권한체크를 하지 않는다.
-        else {
+        gpsview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gpsTracker = new GpsTracker(SendMsg.this);
 
+                double latitude = gpsTracker.getLatitude();
+                double longitude = gpsTracker.getLongitude();
 
-            gpsview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    gpsTracker = new GpsTracker(SendMsg.this);
+                String address = getCurrentAddress(latitude, longitude);
+                Tv_Gps.setText(address);
 
-                    double latitude = gpsTracker.getLatitude();
-                    double longitude = gpsTracker.getLongitude();
-
-                    String address = getCurrentAddress(latitude, longitude);
-                    Tv_Gps.setText(address);
-
-                }
-            });
-        }
+            }
+        });
 
         Btn_SendMsg.setOnClickListener(new View.OnClickListener() {
             @Override
